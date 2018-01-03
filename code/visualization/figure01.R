@@ -31,6 +31,8 @@ dge1 %>% use_series(frame) %>% nrow
 dge1 %>% use_series(frame) %>% filter(p.adj < 0.05) %>% nrow # cases vs. ctrls. (all subjects)
 dge2 %>% use_series(frame) %>% filter(p.adj < 0.05) %>% nrow # cases vs. ctrls. (no smokers)
 dge3 %>% use_series(frame) %>% filter(p.adj < 0.05) %>% nrow # severe cases vs. moderate cases (no smokers)
+dge4 %>% use_series(frame) %>% filter(p.adj < 0.05) %>% nrow # severe cases vs. ctrls. (no smokers)
+dge5 %>% use_series(frame) %>% filter(p.adj < 0.05) %>% nrow # moderate cases vs. ctrls. (no smokers)
 
 # How many TREM1 gene sets were tested?
 fgseaRes1 %>% use_series(pathway) %>% length
@@ -55,6 +57,8 @@ dge1 %>% use_series(frame) %>% filter(geneSymbols %in% table3_genes)
 fgseaRes1 %>% arrange(desc(NES)) %>% select(-leadingEdge) %>% filter(padj < 0.05)
 fgseaRes2 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
 fgseaRes3 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
+fgseaRes4 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
+fgseaRes5 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
 
 
 ## ---- clean_up_env
