@@ -10,6 +10,7 @@ library("forcats")
 library("magrittr")
 library("genefilter")
 library("devtools")
+library("readr")
 
 # custom annotation package:
 # see "make_hthgu133pluspm_db.R"
@@ -25,8 +26,6 @@ es_ubiopred_wb <- GSE69683[[1]]
 
 # annotation(es_ubiopred_wb) <- "GPL13158" # aka Affymetrix HT HG-U133+ PM Array
 annotation(es_ubiopred_wb) <- "hthgu133pluspm"
-
-rm(list = ls() %>% extract(!grepl("^es_", .))) # clean up
 
 
 ## ---- setup_pheno_data
@@ -83,6 +82,26 @@ cbc_phenos1 <- ecbc1 %>%
     select(geo_accession, starts_with("EST"))
 
 pData(es_ubiopred_wb) %<>% left_join(cbc_phenos1)
+
+
+## ---- load_more_metadata
+# incorporate important metadata available not through GEO but through direct data access request to U-BIOPRED
+full_metadata <- read_tsv(file.path(base_data_dir, "ubiopred_bigler_metadata.txt"))
+
+full_metadata %<>%
+    transmute(
+        title = Patient_ID,
+        geo_accession = GEO_ID,
+        site = Site_Code %>% as.factor,
+        WBC = `Wbcs_(xE03_/uL)` %>% na_if("NULL") %>% as.numeric,
+        PCTEOS = Eosinophils_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTLYMPH = Lymphocytes_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTMONO = Monocytes_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTNEUT = Neutrophils_Pct %>% na_if("NULL") %>% as.numeric,
+        RIN = RIN_RNA_QC %>% na_if("NA") %>% na_if(".") %>% as.numeric
+    )
+
+pData(es_ubiopred_wb) %<>% left_join(full_metadata)
 
 
 ## ---- clean_up_env
