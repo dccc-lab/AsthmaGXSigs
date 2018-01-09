@@ -40,6 +40,26 @@ pData(es_ubiopred_wb)$severe <- es_ubiopred_wb %>% pData %>% use_series(cohort) 
 pData(es_ubiopred_wb)$smoker <- es_ubiopred_wb %>% pData %>% use_series(cohort) %in% c("Severe asthma, smoking")
 
 
+## ---- load_more_metadata
+# incorporate important metadata available not through GEO but through direct data access request to U-BIOPRED
+full_metadata <- read_tsv(file.path(base_data_dir, "ubiopred_bigler_metadata.txt"))
+
+full_metadata %<>%
+    transmute(
+        title = Patient_ID,
+        geo_accession = GEO_ID,
+        site = Site_Code %>% as.factor,
+        WBC = `Wbcs_(xE03_/uL)` %>% na_if("NULL") %>% as.numeric,
+        PCTEOS = Eosinophils_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTLYMPH = Lymphocytes_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTMONO = Monocytes_Pct %>% na_if("NULL") %>% as.numeric,
+        PCTNEUT = Neutrophils_Pct %>% na_if("NULL") %>% as.numeric,
+        RIN = RIN_RNA_QC %>% na_if("NA") %>% na_if(".") %>% as.numeric
+    )
+
+pData(es_ubiopred_wb) %<>% left_join(full_metadata)
+
+
 ## ---- setup_feature_data
 fData(es_ubiopred_wb)$ID <- fData(es_ubiopred_wb)$ID %>% as.character
 
@@ -52,18 +72,6 @@ temp_chr_df <- mget(fData(es_ubiopred_wb)$ID, hthgu133pluspmCHR) %>% unlist %>% 
 fData(es_ubiopred_wb) %<>% left_join(temp_chr_df)
 rownames(fData(es_ubiopred_wb)) <- fData(es_ubiopred_wb)$ID # put rownames back!
 rm(temp_chr_df)
-
-
-## ---- make_gx_pcs_wb
-res_pca_ubiopred_wb <- getPCAFunc(es = es_ubiopred_wb, labelVariable = "title", requireLog2 = FALSE, corFlag = TRUE)
-
-# merge principal components (PC) of gene expression data into phenotype data
-pDat_wb <- es_ubiopred_wb %>% pData %>% tibble::rownames_to_column()
-pcDat_wb <- res_pca_ubiopred_wb %>% use_series(pcs) %>% use_series(x) %>% as.data.frame %>%
-    set_colnames(paste0("gx", colnames(.))) %>% tibble::rownames_to_column() %>% dplyr::select(rowname, gxPC1:gxPC10)
-
-pData(es_ubiopred_wb) <- pDat_wb %>% left_join(pcDat_wb, by = c("title" = "rowname")) %>%
-    set_rownames(pDat_wb %>% use_series(rowname)) %>% dplyr::select(-rowname) %>% as.data.frame
 
 
 ## ---- estimate_wb_cbcs
@@ -84,24 +92,16 @@ cbc_phenos1 <- ecbc1 %>%
 pData(es_ubiopred_wb) %<>% left_join(cbc_phenos1)
 
 
-## ---- load_more_metadata
-# incorporate important metadata available not through GEO but through direct data access request to U-BIOPRED
-full_metadata <- read_tsv(file.path(base_data_dir, "ubiopred_bigler_metadata.txt"))
+## ---- make_gx_pcs_wb
+res_pca_ubiopred_wb <- getPCAFunc(es = es_ubiopred_wb, labelVariable = "title", requireLog2 = FALSE, corFlag = TRUE)
 
-full_metadata %<>%
-    transmute(
-        title = Patient_ID,
-        geo_accession = GEO_ID,
-        site = Site_Code %>% as.factor,
-        WBC = `Wbcs_(xE03_/uL)` %>% na_if("NULL") %>% as.numeric,
-        PCTEOS = Eosinophils_Pct %>% na_if("NULL") %>% as.numeric,
-        PCTLYMPH = Lymphocytes_Pct %>% na_if("NULL") %>% as.numeric,
-        PCTMONO = Monocytes_Pct %>% na_if("NULL") %>% as.numeric,
-        PCTNEUT = Neutrophils_Pct %>% na_if("NULL") %>% as.numeric,
-        RIN = RIN_RNA_QC %>% na_if("NA") %>% na_if(".") %>% as.numeric
-    )
+# merge principal components (PC) of gene expression data into phenotype data
+pDat_wb <- es_ubiopred_wb %>% pData %>% tibble::rownames_to_column()
+pcDat_wb <- res_pca_ubiopred_wb %>% use_series(pcs) %>% use_series(x) %>% as.data.frame %>%
+    set_colnames(paste0("gx", colnames(.))) %>% tibble::rownames_to_column() %>% dplyr::select(rowname, gxPC1:gxPC10)
 
-pData(es_ubiopred_wb) %<>% left_join(full_metadata)
+pData(es_ubiopred_wb) <- pDat_wb %>% left_join(pcDat_wb, by = c("title" = "rowname")) %>%
+    set_rownames(pDat_wb %>% use_series(rowname)) %>% dplyr::select(-rowname) %>% as.data.frame
 
 
 ## ---- clean_up_env
