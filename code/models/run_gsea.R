@@ -14,21 +14,21 @@ rundate_gsea <- format(Sys.Date(), format = "%Y%m%d")
 ## ---- run_dge
 # cases vs. ctrls. (all subjects)
 dge1 <- lmFitWrapper(es_ubiopred_wb, 
-                     formula = ~asthma + severe + smoker + sex + gxPC1 + gxPC2 + ESTNEUT,
+                     formula = ~asthma + severe + smoker + sex + gxPC1 + gxPC2 + RIN + site + PCTEOS + PCTLYMPH + PCTMONO + PCTNEUT,
                      probeID.var = "ID",
                      gene.var = "symbol",
                      chr.var = "chromosome")
 
 # cases vs. ctrls. (no smokers)
 dge2 <- lmFitWrapper(es_ubiopred_wb[, !es_ubiopred_wb$smoker], 
-                     formula = ~asthma + severe + sex + gxPC1 + gxPC2 + ESTNEUT,
+                     formula = ~asthma + severe + sex + gxPC1 + gxPC2 + RIN + site + PCTEOS + PCTLYMPH + PCTMONO + PCTNEUT,
                      probeID.var = "ID",
                      gene.var = "symbol",
                      chr.var = "chromosome")
 
 # severe cases vs. moderate cases (no smokers)
 dge3 <- lmFitWrapper(es_ubiopred_wb[, !es_ubiopred_wb$smoker & es_ubiopred_wb$asthma], 
-                     formula = ~severe + sex + gxPC1 + gxPC2 + ESTNEUT,
+                     formula = ~severe + sex + gxPC1 + gxPC2 + RIN + site + PCTEOS + PCTLYMPH + PCTMONO + PCTNEUT,
                      probeID.var = "ID",
                      gene.var = "symbol",
                      chr.var = "chromosome")
