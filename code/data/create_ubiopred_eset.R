@@ -55,7 +55,9 @@ full_metadata %<>%
         PCTMONO = Monocytes_Pct %>% na_if("NULL") %>% as.numeric,
         PCTNEUT = Neutrophils_Pct %>% na_if("NULL") %>% as.numeric,
         RIN = RIN_RNA_QC %>% na_if("NA") %>% na_if(".") %>% as.numeric
-    )
+    ) %>% 
+    # replace missing metadata values among 36 subjects with median values
+    mutate_at(vars(WBC:RIN), ~ifelse(is.na(.), median(., na.rm = TRUE), .))
 
 pData(es_ubiopred_wb) %<>% left_join(full_metadata)
 
