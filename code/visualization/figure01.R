@@ -54,11 +54,11 @@ intersect(core_genes, table3_genes)
 dge1 %>% use_series(frame) %>% filter(geneSymbols %in% table3_genes)
 
 # Which primary analysis gene sets were enriched in secondary analyses?
-fgseaRes1 %>% arrange(desc(NES)) %>% select(-leadingEdge) %>% filter(padj < 0.05)
-fgseaRes2 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
-fgseaRes3 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
-fgseaRes4 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
-fgseaRes5 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05)
+fgseaRes1 %>% arrange(desc(NES)) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+fgseaRes2 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+fgseaRes3 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+fgseaRes4 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+fgseaRes5 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
 
 
 ## ---- clean_up_env
