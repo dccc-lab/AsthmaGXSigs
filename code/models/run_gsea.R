@@ -35,14 +35,14 @@ dge3 <- lmFitWrapper(es_ubiopred_wb[, !es_ubiopred_wb$smoker & es_ubiopred_wb$as
 
 # severe cases vs. ctrls. (no smokers)
 dge4 <- lmFitWrapper(es_ubiopred_wb[, es_ubiopred_wb$cohort %in% c("Healthy, non-smoking", "Severe asthma, non-smoking")], 
-                     formula = ~asthma + sex + gxPC1 + gxPC2 + ESTNEUT,
+                     formula = ~asthma + sex + gxPC1 + gxPC2 + RIN + site + PCTEOS + PCTLYMPH + PCTMONO + PCTNEUT,
                      probeID.var = "ID",
                      gene.var = "symbol",
                      chr.var = "chromosome")
 
 # moderate cases vs. ctrls. (no smokers)
 dge5 <- lmFitWrapper(es_ubiopred_wb[, es_ubiopred_wb$cohort %in% c("Healthy, non-smoking", "Moderate asthma, non-smoking")], 
-                     formula = ~asthma + sex + gxPC1 + gxPC2 + ESTNEUT,
+                     formula = ~asthma + sex + gxPC1 + gxPC2 + RIN + site + PCTEOS + PCTLYMPH + PCTMONO + PCTNEUT,
                      probeID.var = "ID",
                      gene.var = "symbol",
                      chr.var = "chromosome")
