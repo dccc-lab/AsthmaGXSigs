@@ -60,6 +60,10 @@ fgseaRes3 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% f
 fgseaRes4 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
 fgseaRes5 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj < 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
 
+# Which primary analysis gene sets were NOT enriched in secondary analyses?
+fgseaRes3 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj > 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+fgseaRes4 %>% filter(pathway %in% trem1_pathways) %>% select(-leadingEdge) %>% filter(padj > 0.05) %>% mutate_at(c("pval", "padj", "ES", "NES"), funs(signif(., 3)))
+
 
 ## ---- clean_up_env
 session_info()
