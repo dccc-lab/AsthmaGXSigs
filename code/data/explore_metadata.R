@@ -21,7 +21,7 @@ es_ubiopred_wb %>% pData %$% lm(gxPC2 ~ race) %>% tidy
 es_ubiopred_wb %>% pData %$% lm(gxPC1 ~ site) %>% tidy
 es_ubiopred_wb %>% pData %$% lm(gxPC2 ~ site) %>% tidy
 
-pdf(file = here("reports", "diagnostics", "gxPCA.pdf"), width = 8, height = 8, pointsize = 8)
+# pdf(file = here("reports", "diagnostics", "gxPCA.pdf"), width = 8, height = 8, pointsize = 8)
 
 screeplot(res_pca_ubiopred_wb$pcs, type = "lines", main = "U-BIOPRED WB gxPCs")
 
@@ -85,11 +85,11 @@ pca2DPlot(pcaObj = res_pca_ubiopred_wb,
           legendPosition = "topleft"
 )
 
-dev.off()
+# dev.off()
 
 
 ## ---- explore_cbcs
-pdf(file = here("reports", "diagnostics", "CBC.pdf"), width = 8, height = 8, pointsize = 8)
+# pdf(file = here("reports", "diagnostics", "CBC.pdf"), width = 8, height = 8, pointsize = 8)
 
 # plot estimated CBCs by asthma severity
 pData(es_ubiopred_wb) %>%
@@ -192,7 +192,7 @@ pData(es_ubiopred_wb) %>%
     geom_abline(intercept = 0, slope = 1, colour = "gray60", size = 0.25, linetype = "dashed") + 
     geom_smooth(method = "lm", se = FALSE, fullrange = TRUE, size = 0.25) 
 
-dev.off()
+# dev.off()
 
 # measure correlations of estimated and measured CBCs
 pData(es_ubiopred_wb) %$% cor.test(ESTLYMPH, PCTLYMPH) %>% tidy
