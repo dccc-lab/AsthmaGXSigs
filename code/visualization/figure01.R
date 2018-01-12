@@ -19,10 +19,18 @@ dev.off()
 ## ---- answer_main_text_queries
 # How many cases and controls?
 es_ubiopred_wb %>% pData %$% table(asthma)
+es_ubiopred_wb %>% pData %$% table(cohort, asthma)
 es_ubiopred_wb %>% pData %$% table(severe, asthma)
 es_ubiopred_wb %>% pData %$% table(smoker, asthma)
 es_ubiopred_wb %>% pData %>% filter(asthma == TRUE) %$% table(severe)
 es_ubiopred_wb %>% pData %>% filter(asthma == TRUE) %$% table(smoker, severe)
+
+es_ubiopred_wb %>% pData %$% table(cohort)
+es_ubiopred_wb[, !es_ubiopred_wb$smoker] %>% pData %$% table(cohort)
+es_ubiopred_wb[, !es_ubiopred_wb$smoker & es_ubiopred_wb$asthma] %>% pData %$% table(cohort)
+es_ubiopred_wb[, es_ubiopred_wb$cohort %in% c("Healthy, non-smoking", "Severe asthma, non-smoking")] %>% pData %$% table(cohort)
+es_ubiopred_wb[, es_ubiopred_wb$cohort %in% c("Healthy, non-smoking", "Severe asthma, non-smoking")] %>% pData %$% table(cohort)
+es_ubiopred_wb[, es_ubiopred_wb$cohort %in% c("Healthy, non-smoking", "Moderate asthma, non-smoking")] %>% pData %$% table(cohort)
 
 # How many genes tested for differential expression?
 dge1 %>% use_series(frame) %>% nrow
