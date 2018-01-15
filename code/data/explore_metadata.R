@@ -25,6 +25,8 @@ es_ubiopred_wb %>% pData %$% lm(gxPC2 ~ site) %>% tidy
 
 screeplot(res_pca_ubiopred_wb$pcs, type = "lines", main = "U-BIOPRED WB gxPCs")
 
+summary(res_pca_ubiopred_wb$pcs) %>% use_series(importance) %>% extract(, 1:10)
+
 pca2DPlot(pcaObj = res_pca_ubiopred_wb,
           plot.dim = c(1, 2),
           labelVariable = "cohort",
@@ -33,6 +35,51 @@ pca2DPlot(pcaObj = res_pca_ubiopred_wb,
           equalRange = FALSE,
           xlab = "PC1",
           ylab = "PC2",
+          cex.legend = 0.6,
+          cex = 1,
+          cex.lab = 1,
+          cex.axis = 1,
+          legendPosition = "topleft"
+)
+
+pca2DPlot(pcaObj = res_pca_ubiopred_wb,
+          plot.dim = c(3, 2),
+          labelVariable = "cohort",
+          title = "U-BIOPRED WB [Cohort]",
+          plotOutPutFlag = FALSE,
+          equalRange = FALSE,
+          xlab = "PC3",
+          ylab = "PC2",
+          cex.legend = 0.6,
+          cex = 1,
+          cex.lab = 1,
+          cex.axis = 1,
+          legendPosition = "topleft"
+)
+
+pca2DPlot(pcaObj = res_pca_ubiopred_wb,
+          plot.dim = c(3, 4),
+          labelVariable = "cohort",
+          title = "U-BIOPRED WB [Cohort]",
+          plotOutPutFlag = FALSE,
+          equalRange = FALSE,
+          xlab = "PC3",
+          ylab = "PC4",
+          cex.legend = 0.6,
+          cex = 1,
+          cex.lab = 1,
+          cex.axis = 1,
+          legendPosition = "topleft"
+)
+
+pca2DPlot(pcaObj = res_pca_ubiopred_wb,
+          plot.dim = c(5, 4),
+          labelVariable = "cohort",
+          title = "U-BIOPRED WB [Cohort]",
+          plotOutPutFlag = FALSE,
+          equalRange = FALSE,
+          xlab = "PC5",
+          ylab = "PC4",
           cex.legend = 0.6,
           cex = 1,
           cex.lab = 1,
@@ -90,6 +137,43 @@ pca2DPlot(pcaObj = res_pca_ubiopred_wb,
 
 ## ---- explore_cbcs
 # pdf(file = here("reports", "diagnostics", "CBC.pdf"), width = 8, height = 8, pointsize = 8)
+
+# plot RNA quality by asthma severity
+pData(es_ubiopred_wb) %>%
+    select(cohort, RIN) %>% 
+    melt(id.vars = "cohort") %>%
+    ggplot(aes(x = variable, y = value)) +
+    geom_boxplot(aes(fill = cohort), notch = TRUE) +
+    theme_classic(base_size = 12) +
+    theme(
+        legend.position = "top",
+        axis.line.x = element_line(colour = "black", size = 0.5, linetype = "solid"),
+        axis.line.y = element_line(colour = "black", size = 0.5, linetype = "solid"),
+        plot.title = element_text(face = "bold", hjust = 0.5)) +
+    guides(fill = guide_legend(nrow = 2, byrow = TRUE, title = "")) +
+    labs(
+        y = "RNA Integrity Number",
+        x = "",
+        title = "U-BIOPRED WB") +
+    ylim(5, 10)
+
+# plot total WBC by asthma severity
+pData(es_ubiopred_wb) %>%
+    select(cohort, WBC) %>% 
+    melt(id.vars = "cohort") %>%
+    ggplot(aes(x = variable, y = value)) +
+    geom_boxplot(aes(fill = cohort), notch = TRUE) +
+    theme_classic(base_size = 12) +
+    theme(
+        legend.position = "top",
+        axis.line.x = element_line(colour = "black", size = 0.5, linetype = "solid"),
+        axis.line.y = element_line(colour = "black", size = 0.5, linetype = "solid"),
+        plot.title = element_text(face = "bold", hjust = 0.5)) +
+    guides(fill = guide_legend(nrow = 2, byrow = TRUE, title = "")) +
+    labs(
+        y = "Total White Blood Cells (10^3/uL)",
+        x = "",
+        title = "U-BIOPRED WB")
 
 # plot estimated CBCs by asthma severity
 pData(es_ubiopred_wb) %>%
@@ -214,6 +298,8 @@ pData(es_ubiopred_wb) %$% cor.test(PCTNEUT, PCTLYMPH) %>% tidy
 pData(es_ubiopred_wb) %$% cor.test(PCTNEUT, PCTMONO) %>% tidy
 
 # check relationships of CBCs with disease severity
+pData(es_ubiopred_wb) %$% lm(WBC ~ cohort) %>% tidy
+
 pData(es_ubiopred_wb) %$% lm(PCTEOS ~ cohort) %>% tidy
 
 pData(es_ubiopred_wb) %$% lm(PCTLYMPH ~ cohort) %>% tidy
