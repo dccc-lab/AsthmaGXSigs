@@ -1,6 +1,6 @@
 # TREM-1 response signatures common to expression profiles of both asthma affection and asthma control
 
-Croteau-Chonka, D.C. and Raby, B.A. (2018) [DOI TBD]
+Croteau-Chonka, D.C. and Raby, B.A. (2018) [https://doi.org/10.1164/rccm.201709-1964LE]
 
 ****
 
